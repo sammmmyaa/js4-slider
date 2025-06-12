@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Slider</title>
+  <style>
+    .slider {
+      width: 300px;
+      height: 20px;
+      background: lightgray;
+      position: relative;
+      margin-top: 30px;
+    }
+    .track {
+      width: 100%;
+      height: 100%;
+      background: green;
+      position: absolute;
+    }
+    .divisor {
+      height: 100%;
+      background: blue;
+      position: absolute;
+      opacity: 0.5;
+    }
+    .thumb {
+      width: 15px;
+      height: 30px;
+      background: red;
+      position: absolute;
+      top: -5px;
+      transform: rotate(45deg);
+      cursor: pointer;
+    }
+    .value {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 16px;
+    }
+    .marks {
+      width: 300px;
+      height: 10px;
+      background: blue;
+      position: absolute;
+      top: 20px;
+    }
+    .mark {
+      width: 1px;
+      height: 5px;
+      background: black;
+      position: absolute;
+      top: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="slider">
+    <div class="track"></div>
+    <div class="divisor"></div>
+    <div class="thumb" id="thumb"></div>
+    <div class="value" id="value">0</div>
+    <div class="marks" id="marks"></div>
+  </div>
+
+  <script>
+    let thumb = document.getElementById("thumb");
+    let value = document.getElementById("value");
+    let slider = document.querySelector(".slider");
+    let divisor = document.querySelector(".divisor");
+    let isDragging = false;
+    let max = 100;
+
+    thumb.addEventListener("mousedown", startDragging);
+    document.addEventListener("mousemove", drag);
+    document.addEventListener("mouseup", stopDragging);
+
+    for (let i = 0; i <= 10; i++) {
+      let mark = document.createElement("div");
+      mark.className = "mark";
+      mark.style.left = (i * 30) + "px";
+      document.getElementById("marks").appendChild(mark);
+    }
+
+    function startDragging(e) {
+      isDragging = true;
+    }
+
+    function drag(e) {
+      if (isDragging) {
+        let rect = slider.getBoundingClientRect();
+        let pos = e.clientX - rect.left;
+        if (pos < 0) pos = 0;
+        if (pos > rect.width) pos = rect.width;
+        thumb.style.left = pos - 7 + "px";
+        let val = (pos / rect.width) * max;
+        value.innerHTML = Math.round(val);
+        divisor.style.width = (val / max) * 100 + "%";
+      }
+    }
+
+    function stopDragging() {
+      isDragging = false;
+    }
+  </script>
+</body>
+</html>
